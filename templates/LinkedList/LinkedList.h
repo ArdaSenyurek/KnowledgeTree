@@ -1,10 +1,12 @@
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
 #include "LinkedListNode.h"
+#include <iostream>
 
-// TODO: bound checking. i.e start_ =? nullptr.
 // TODO: implement iterator.
-
+// TODO: implement exception handling.
+// TODO: Access should be thru iterator.
+// TODO: Too much branching when deleting and inserting. Need generalization. Maybe through encoding? Bitmask maybe.
 
 template<typename T>
 class LinkedList;
@@ -33,9 +35,8 @@ class LinkedList{
     const LinkedListNode<T> *deleteHead();
     const LinkedListNode<T> *deleteTail();
 
-    void print() const;
-    
-    
+    // Access (Const) 
+      // TODO
 };
 
 template<typename T>
@@ -46,7 +47,6 @@ LinkedList<T>::LinkedList(const T &data) {
   while(tmpPtr -> next() != nullptr){
     tmpPtr = tmpPtr -> next();
   }
-  
   end_ = tmpPtr; 
 }
 
@@ -56,36 +56,26 @@ const LinkedListNode<T>
 
   // Nothing to delete
   if (start_ == nullptr) throw 123;
-
   else {
-
     // These have automatic storage lifetime anyways.
     LinkedListNode<T> *prev = nullptr;
     LinkedListNode<T> *curr = start_;
 
-    unsigned int i = 0;
-    while ( curr -> getData() != data || curr -> next() != nullptr){
-      
+    while ( curr -> getData() != data && curr -> next() != nullptr){
       prev = curr;
       curr = curr -> next();
     }
-    
     // head
     if (prev == nullptr) {
-
       start_ = curr -> next();
       if(start_ == nullptr) end_ = nullptr;
-
     }
-
     else {
       if (curr -> next() != nullptr)
         prev -> setNext(curr -> next());
-      
       else 
         prev -> setNext(nullptr);
     }
-
     curr -> setNext(nullptr);
     return curr;
   }
@@ -94,11 +84,14 @@ const LinkedListNode<T>
 template<typename T>
 std::ostream &operator<<(std::ostream &os, const LinkedList<T> &ds) {
   const auto *node = ds.start_;
-  while(node -> next() != nullptr){
-    os << *node;
-    node = node -> next(); 
+  if (node == nullptr) os << "NULL\n";
+  else {
+    while(node -> next() != nullptr){
+      os << *node;
+      node = node -> next(); 
     }
-    os << *node;
+    os << *node << std::endl;
+  }
   return os;
 }
 
@@ -117,18 +110,15 @@ template<typename T>
 const LinkedListNode<T> 
 *LinkedList<T>::deleteTail(){
 
+  if (start_ == nullptr) throw 123;
   LinkedListNode<T> *prev = nullptr;
   LinkedListNode<T> *curr = start_;
-
   while(curr -> next() != nullptr) {
     prev = curr;
     curr = curr -> next();
   }
-  
   if (curr == nullptr) throw 123;
-
   else prev -> setNext(nullptr);
-
   curr -> setNext(nullptr);
   return curr; 
 }
@@ -158,7 +148,6 @@ const LinkedListNode<T>
     end_ = node;
   }
   return end_;
-
 }
 #endif 
 
