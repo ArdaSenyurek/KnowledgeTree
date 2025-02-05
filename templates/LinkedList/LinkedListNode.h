@@ -1,8 +1,18 @@
 #ifndef LINKEDLISTNODE_H
 #define LINKEDLISTNODE_H
 
+#include <iostream>
+
+
+template<typename T>
+class LinkedListNode;
+
+template<typename T>
+std::ostream &operator<<(std::ostream &, const LinkedListNode<T> &);
+
 template<typename T>
 class LinkedListNode{
+  friend std::ostream &operator<< <>(std::ostream &, const LinkedListNode &);
   private:
     T data_;
     LinkedListNode* next_;
@@ -10,9 +20,8 @@ class LinkedListNode{
     LinkedListNode() = default;
     LinkedListNode(const T &);
 
-    LinkedListNode *next();
-    LinkedListNode *setNext(const LinkedListNode *const);
-    void print(); 
+    const LinkedListNode *next() const;
+    LinkedListNode *setNext(LinkedListNode *const);
 
     LinkedListNode &operator=(const LinkedListNode &);
 };
@@ -26,19 +35,25 @@ inline LinkedListNode<T>::LinkedListNode(const T &data)
 }
 
 template<typename T>
-inline LinkedListNode<T> *LinkedListNode<T>::next(){
+inline const LinkedListNode<T>
+*LinkedListNode<T>::next() const{
   return next_;
 }
 
 template<typename T>
 inline LinkedListNode<T>
-*LinkedListNode<T>::setNext(const LinkedListNode *const newNext){
+*LinkedListNode<T>::setNext(LinkedListNode *const newNext){
   next_ = newNext;
+  return next_;
 }
 
 template<typename T>
-inline void LinkedListNode<T>::print(){
-  print(data_); // Streaming better. (Whatever)
+std::ostream &operator<<(std::ostream &os, const LinkedListNode<T> &node){
+
+  os << node.data_;
+  if (node.next() != nullptr) os << " -> ";
+  
+  return os;
 }
 
 template<typename T>
