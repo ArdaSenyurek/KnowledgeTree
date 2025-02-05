@@ -25,12 +25,10 @@ class LinkedList{
     LinkedList(const T &);
 
     // Insertion
-    const LinkedListNode<T> *insert(const unsigned int, const T &);
     const LinkedListNode<T> *insertHead(const T &);
     const LinkedListNode<T> *insertTail(const T &);
     
     // Deletion
-    const LinkedListNode<T> *deleteNode(const unsigned int);
     const LinkedListNode<T> *deleteNode(const T &);
     const LinkedListNode<T> *deleteHead();
     const LinkedListNode<T> *deleteTail();
@@ -53,63 +51,44 @@ LinkedList<T>::LinkedList(const T &data) {
 }
 
 template<typename T>
-const LinkedListNode<T> 
-*LinkedList<T>::insert(const unsigned int index, const T &data){
-
-  LinkedListNode<T> *node = start_;
-  LinkedListNode<T> *ptr = new LinkedListNode<T>(data);
-  unsigned int i = 0;
-  if (index != 0) {
-    while(i++ < index -1 && node -> next() != nullptr){
-      node = node -> next();
-    }
-    ptr -> setNext(node -> next());
-    return node -> setNext(ptr);
-  }
-  else {
-    LinkedListNode<T> *startPtr = start_;
-    start_ = ptr;
-    ptr -> setNext(startPtr);
-    return start_;
-  }
-}
-
-  
-template<typename T>
 const LinkedListNode<T>
 *LinkedList<T>::deleteNode(const T &data){
 
-  // These have automatic storage lifetime anyways.
-  LinkedListNode<T> *prev = nullptr;
-  LinkedListNode<T> *curr = start_;
-  
   // Nothing to delete
-  if (curr == nullptr) throw 123;
-
-  unsigned int i = 0;
-  while ( curr -> getData() != data || curr -> next() != nullptr){
-    
-    prev = curr;
-    curr = curr -> next();
-  }
-  
-  if (prev == nullptr) {
-
-    start_ = curr -> next();
-    if(start_ == nullptr) end_ = nullptr;
-
-  }
+  if (start_ == nullptr) throw 123;
 
   else {
-    if (curr -> next() != nullptr)
-      prev -> setNext(curr -> next());
-    
-    else 
-      prev -> setNext(nullptr);
-  }
 
-  curr -> setNext(nullptr);
-  return curr;
+    // These have automatic storage lifetime anyways.
+    LinkedListNode<T> *prev = nullptr;
+    LinkedListNode<T> *curr = start_;
+
+    unsigned int i = 0;
+    while ( curr -> getData() != data || curr -> next() != nullptr){
+      
+      prev = curr;
+      curr = curr -> next();
+    }
+    
+    // head
+    if (prev == nullptr) {
+
+      start_ = curr -> next();
+      if(start_ == nullptr) end_ = nullptr;
+
+    }
+
+    else {
+      if (curr -> next() != nullptr)
+        prev -> setNext(curr -> next());
+      
+      else 
+        prev -> setNext(nullptr);
+    }
+
+    curr -> setNext(nullptr);
+    return curr;
+  }
 } 
 
 template<typename T>
@@ -122,49 +101,15 @@ std::ostream &operator<<(std::ostream &os, const LinkedList<T> &ds) {
     os << *node;
   return os;
 }
-template<typename T>
-const LinkedListNode<T>
-*LinkedList<T>::deleteNode(const unsigned int index){
-  LinkedListNode<T> *prev = nullptr;
-  LinkedListNode<T> *curr = start_;
-  
-  // Nothing to delete
-  if (curr == nullptr) throw 123;
-
-  unsigned int i = 0;
-  while ( i++ < index || curr -> next() != nullptr){
-    
-    prev = curr;
-    curr = curr -> next();
-  }
-  
-  if (prev == nullptr) {
-
-    start_ = curr -> next();
-    if(start_ == nullptr) end_ = nullptr;
-
-  }
-
-  else {
-    if (curr -> next() != nullptr)
-      prev -> setNext(curr -> next());
-    
-    else 
-      prev -> setNext(nullptr);
-  }
-
-  curr -> setNext(nullptr);
-  return curr;
-}
 
 template<typename T>
 const LinkedListNode<T>
 *LinkedList<T>::deleteHead(){
   if (start_ == nullptr) throw 123;
 
-  LinkedListNode<T> *tmpStart = start_;
+  LinkedListNode<T> *tmp = start_;
   start_ = start_ -> next();
-  tmpStart -> setNext(nullptr);
+  tmp -> setNext(nullptr);
   return start_;
 }
 
@@ -204,8 +149,14 @@ const LinkedListNode<T>
 *LinkedList<T>::insertTail(const T &data){
   
   LinkedListNode<T> *node = new LinkedListNode<T>(data);
-  end_ -> setNext(node);
-  end_ = node;
+  if(end_ != nullptr) {
+    end_ -> setNext(node);
+    end_ = node;
+  }
+  else {
+    start_ = node;
+    end_ = node;
+  }
   return end_;
 
 }
