@@ -1,4 +1,4 @@
 #!/bin/bash
 
 
-clang++ -Itemplates/LinkedList program.cpp -g
+clang++ -Itemplates/LinkedList -DDEBUG_DELETE program.cpp -g
