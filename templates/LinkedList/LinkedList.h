@@ -7,7 +7,8 @@
 // TODO: implement exception handling.
 // TODO: Access should be thru iterator.
 // TODO: Too much branching when deleting and inserting. Need generalization. Maybe through encoding? Bitmask maybe.
-
+// TODO: forwardIterator class
+// TODO: Concepts for iterator type. (Require for specific type for iterator) ??
 template<typename T>
 class LinkedList;
 
@@ -19,10 +20,18 @@ class LinkedList{
 
   friend std::ostream &operator<< <>(std::ostream &, const LinkedList &);
   private:
-   LinkedListNode<T> *start_;
-   LinkedListNode<T> *end_;
+    LinkedListNode<T> *start_;
+    LinkedListNode<T> *end_;
+    iterator begin_;
+    iterator end_;
 
   public:
+    typedef forwardIterator iterator;
+
+    iterator& begin();
+    iterator& end();
+
+
     LinkedList() = default;
     LinkedList(const T &);
 
